@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Text.RegularExpressions;
+
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace TestExcelToWord
 {
@@ -10,7 +14,91 @@ namespace TestExcelToWord
     {
         public void TransferExcelToWord(string sourceFilePath, string outputFilePath)
         {
+            try
+            {
+                _log.Clear();// reset log
+                WriteLog($@"Started transfer from [{sourceFilePath}] to [{outputFilePath}]");
+                if (!File.Exists(sourceFilePath))
+                    throw new FileNotFoundException("Source Excel file does not exist.", sourceFilePath);
+                if (File.Exists(outputFilePath))
+                {
+                    WriteLog("Removing destination file");
+                    File.Delete(outputFilePath);
+                    WriteLog("Destination file is successfully removed.");
+                }
+
+                string letters, digits;
+                ReadFromExcel(sourceFilePath, out letters, out digits);
+                SaveToWordFile(outputFilePath, letters, digits);
+            }
+            catch (Exception e)
+            {
+                WriteLog(e.Message);
+                throw;
+            }
+        }
+
+        private void ReadFromExcel(string filePath, out string letters, out string digits)
+        {
+            Excel.Workbook wb = null;
+            try
+            {
+                WriteLog("Started reading from source file.");
+                var excel = new Excel.Application();
+                if (excel == null)
+                    throw new InvalidOperationException("Excel could not be started. Check that you have Microsoft Office installed.");
+                WriteLog("Excel is started.");
+
+                wb = excel.Workbooks.Open(filePath, 0, true); // open workbook
+                if (wb == null)
+                    throw new FileLoadException("Could not open workbook.", filePath);
+                WriteLog("Workbook is successfully opened.");
+                var sheets = wb.Worksheets;
+                var ws = (Excel.Worksheet)sheets.get_Item(1);
+                WriteLog("First worksheet is obtained.");
+
+                var firstColumn = ws.UsedRange.Columns[1];
+                var myvalues = (Array)firstColumn.Cells.Value;
+                WriteLog("First column values are obtained.");
+                string[] strArray = myvalues.OfType<object>().Select(o => o.ToString()).ToArray();
+
+                Regex onlyLettersRegex = new Regex(@"^\p{L}+$");
+                Regex onlyDigitsRegex = new Regex(@"^\d+$");
+                letters = strArray.Where(x => onlyLettersRegex.IsMatch(x))
+                                            .Aggregate((all, cur) => all + " " + cur);
+                WriteLog("Letters cells have been formed into single string.");
+                digits = strArray.Where(x => onlyDigitsRegex.IsMatch(x))
+                                           .Select(x => x.Truncate(MaxDigitLength))
+                                           .Aggregate((all, cur) => all + "-" + cur); ;
+                WriteLog("Digits cells have been formed into single string.");
+            }
+            catch
+            {
+                WriteLog("Error occured during reading from source file.");
+                throw;
+            }
+            finally
+            {
+                if (wb != null)
+                {
+                    wb.Close(false); // close workbook
+                }
+            }
+            WriteLog("Reading from source file completed successfully.");
+        }
+
+        private void SaveToWordFile(string filePath, string letters, string digits)
+        {
 
         }
+
+        private void WriteLog(string message)
+        {
+            string timeStamp = DateTime.Now.ToString("HH:mm:ss.fff");
+            _log.AppendLine(string.Format($@"{timeStamp}        {message}"));
+        }
+        
+        private StringBuilder _log = new StringBuilder();
+        private const int MaxDigitLength = 4;
     }
 }
