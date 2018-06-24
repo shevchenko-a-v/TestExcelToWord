@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,7 +50,18 @@ namespace TestExcelToWord
         {
             if (saveLogFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                // TODO: Save log to file
+                try
+                {
+                    using (var fs = new FileStream(saveLogFileDialog.FileName, FileMode.Create, FileAccess.ReadWrite))
+                    using (var writer = new StreamWriter(fs))
+                    {
+                        writer.Write(_converter.Log);
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Could not save log file to the specified location.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -58,9 +70,23 @@ namespace TestExcelToWord
             var sourceFilePath = textBoxSourceFile.Text;
             var outputFilePath = textBoxOutputFile.Text;
 
-            _converter.TransferExcelToWord(sourceFilePath, outputFilePath);
+            try
+            {
+                _converter.TransferExcelToWord(sourceFilePath, outputFilePath);
+                MessageBox.Show("Operation completed successfully.", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch
+            {
+                MessageBox.Show("Operation has failed. See log for details.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private ExcelToWordConverter _converter { get; } = new ExcelToWordConverter();
+
+        private void btnViewLog_Click(object sender, EventArgs e)
+        {
+            var logDialog = new LogForm(_converter.Log);
+            logDialog.ShowDialog(this);
+        }
     }
 }

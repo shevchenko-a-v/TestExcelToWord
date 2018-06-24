@@ -120,6 +120,7 @@
             this.btnViewLog.TabIndex = 6;
             this.btnViewLog.Text = "Show Log";
             this.btnViewLog.UseVisualStyleBackColor = true;
+            this.btnViewLog.Click += new System.EventHandler(this.btnViewLog_Click);
             // 
             // btnSaveLog
             // 

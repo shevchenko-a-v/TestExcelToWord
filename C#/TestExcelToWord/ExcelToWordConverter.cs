@@ -125,6 +125,8 @@ namespace TestExcelToWord
             string timeStamp = DateTime.Now.ToString("HH:mm:ss.fff");
             _log.AppendLine(string.Format($@"{timeStamp}        {message}"));
         }
+
+        public string Log { get { return _log.ToString(); } }
         
         private StringBuilder _log = new StringBuilder();
         private const int MaxDigitLength = 4;
