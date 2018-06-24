@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 using Excel = Microsoft.Office.Interop.Excel;
+using Word = Microsoft.Office.Interop.Word;
 
 namespace TestExcelToWord
 {
@@ -89,7 +90,34 @@ namespace TestExcelToWord
 
         private void SaveToWordFile(string filePath, string letters, string digits)
         {
-
+            Word.Document doc = null;
+            try
+            {
+                WriteLog("Started writing to destination file.");
+                object missing = System.Reflection.Missing.Value;
+                var word = new Word.Application();
+                if (word == null)
+                    throw new InvalidOperationException("Word could not be started. Check that you have Microsoft Office installed.");
+                WriteLog("Word is started.");
+                doc = word.Documents.Add(ref missing, ref missing, ref missing, ref missing);
+                WriteLog("New document created.");
+                doc.Content.Font.Size = 12;
+                doc.Content.Text = letters + System.Environment.NewLine + digits;
+                WriteLog("Text added.");
+                
+                doc.SaveAs2(filePath);
+                WriteLog("Word file has been saved to disk.");
+            }
+            catch
+            {
+                WriteLog("Error occured during writing to destination file.");
+                throw;
+            }
+            finally
+            {
+                doc.Close();
+            }
+            WriteLog("Writing to destination file completed successfully.");
         }
 
         private void WriteLog(string message)
