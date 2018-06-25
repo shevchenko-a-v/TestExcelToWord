@@ -10,3 +10,9 @@
 
 #include <atlbase.h>
 #include <atlwin.h>
+#include <atlstr.h>
+
+#include "Include\atlapp.h"
+#include "Include\atlframe.h"
+#include "Include\atlsplit.h"
+#include "Include\atlctrls.h"

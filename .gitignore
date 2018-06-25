@@ -6,3 +6,4 @@ C++/TestExcelToWord/Debug/
 C++/TestExcelToWord/Release/
 C++/TestExcelToWord/.vs/
 C++/TestExcelToWord/TestExcelToWord.vcxproj.user
+*.docx
