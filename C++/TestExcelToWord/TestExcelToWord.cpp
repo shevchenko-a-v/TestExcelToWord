@@ -19,6 +19,12 @@ extern "C" int WINAPI _tWinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstan
 
 // Window Message Handlers
 
+LRESULT CTestExcelToWordDialog::OnCommand(UINT, INT nIdentifier, HWND, BOOL & bHandled)
+{
+	ATLVERIFY(EndDialog(nIdentifier));
+	return 0;
+}
+
 LRESULT CTestExcelToWordDialog::OnInitDialog(UINT nMessage, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	ATLVERIFY(CenterWindow());

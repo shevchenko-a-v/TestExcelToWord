@@ -10,6 +10,7 @@ public:
 
 private:
 	void vReadFromExcel(const CString &strSourceFile, CString &strLetters, CString &strDigits);
+	void vWriteToWord(const CString &strDestinationFile, const CString &strLetters, const CString &strDigits);
 	void vWriteLog(const CString& strMessage);
 
 	CString m_strLog;

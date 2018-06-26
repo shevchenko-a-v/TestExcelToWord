@@ -30,3 +30,9 @@
 	rename( "RGB", "ExcelRGB" ) \
 	rename( "CopyFile", "ExcelCopyFile" ) \
 	rename( "ReplaceText", "ExcelReplaceText" ) 
+
+#import "C:\\Program Files\\Microsoft Office\\root\Office16\\MSWORD.OLB" \
+	rename("ExitWindows", "WordExitWindows") \
+	rename("FindText", "WordFindText") 
+
+

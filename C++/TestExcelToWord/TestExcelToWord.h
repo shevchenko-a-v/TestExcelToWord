@@ -10,6 +10,7 @@ public:
 	enum { IDD = IDD_MAIN };
 
 	BEGIN_MSG_MAP(CMainDialog)
+		COMMAND_ID_HANDLER(IDCANCEL, OnCommand)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		COMMAND_HANDLER(IDC_BTN_BROWSE_SOURCE, BN_CLICKED, OnBnClickedBtnBrowseSource)
 		COMMAND_HANDLER(IDC_BTN_BROWSE_OUTPUT, BN_CLICKED, OnBnClickedBtnBrowseOutput)
@@ -18,6 +19,7 @@ public:
 
 private:
 	// Window Message Handlers
+	LRESULT OnCommand(UINT, INT nIdentifier, HWND, BOOL& bHandled);
 	LRESULT OnInitDialog(UINT nMessage, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnBnClickedBtnBrowseSource(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnBnClickedBtnBrowseOutput(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
