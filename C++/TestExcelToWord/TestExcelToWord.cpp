@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "resource.h"
+#include "LogDialog.h"
 #include "TestExcelToWord.h"
 #include "ExcelToWordConverter.h"
+#include <fstream>
+#include <iostream>
 
 
 CTestExcelToWordDialogModule _AtlModule;
@@ -102,5 +105,39 @@ LRESULT CTestExcelToWordDialog::OnBnClickedBtnTransfer(WORD /*wNotifyCode*/, WOR
 
 	m_converter.vTransferExcelToWord(strSource, strDestination);
 
+	return 0;
+}
+
+
+LRESULT CTestExcelToWordDialog::OnBnClickedBtnShowLog(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	CLogDialog logDialog(m_converter.strGetLog());
+	logDialog.DoModal(m_hWnd);
+	return 0;
+}
+
+
+LRESULT CTestExcelToWordDialog::OnBnClickedBtnSaveLog(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	TCHAR buffer[2048];
+	buffer[0] = '\0';
+	OPENFILENAME of;
+	ZeroMemory(&of, sizeof(of));
+
+	of.lStructSize = sizeof(OPENFILENAME);
+	of.lpstrFilter = _T("Text files(*.txt)\0*.txt\0\0");
+	of.nFileOffset = 1;
+	of.lpstrDefExt = _T("txt");
+	of.nMaxFile = 2048;
+	of.lpstrFile = buffer;
+	of.lpstrTitle = _T("Specify output Word file");
+	of.Flags = OFN_DONTADDTORECENT | OFN_NONETWORKBUTTON | OFN_OVERWRITEPROMPT;
+
+	if (GetSaveFileName(&of))
+	{
+		CString strFileName(buffer);
+		std::wofstream file (strFileName, std::ios::out|std::ios::trunc);
+		file << (LPCTSTR)m_converter.strGetLog();
+	}
 	return 0;
 }

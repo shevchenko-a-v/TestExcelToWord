@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ExcelToWordConverter.cpp" />
+    <ClCompile Include="LogDialog.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="TestExcelToWord.cpp" />
   </ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="Include\atlapp.h" />
     <ClInclude Include="Include\atlframe.h" />
     <ClInclude Include="Include\atlsplit.h" />
+    <ClInclude Include="LogDialog.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

@@ -15,6 +15,8 @@ public:
 		COMMAND_HANDLER(IDC_BTN_BROWSE_SOURCE, BN_CLICKED, OnBnClickedBtnBrowseSource)
 		COMMAND_HANDLER(IDC_BTN_BROWSE_OUTPUT, BN_CLICKED, OnBnClickedBtnBrowseOutput)
 		COMMAND_HANDLER(IDC_BTN_TRANSFER, BN_CLICKED, OnBnClickedBtnTransfer)
+		COMMAND_HANDLER(IDC_BTN_SHOW_LOG, BN_CLICKED, OnBnClickedBtnShowLog)
+		COMMAND_HANDLER(IDC_BTN_SAVE_LOG, BN_CLICKED, OnBnClickedBtnSaveLog)
 	END_MSG_MAP()
 
 private:
@@ -30,6 +32,9 @@ private:
 	WTL::CEdit m_EditOutputPath;
 
 	ExcelToWordConverter m_converter;
+public:
+	LRESULT OnBnClickedBtnShowLog(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnBnClickedBtnSaveLog(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 };
 
 ////////////////////////////////////////////////////////////

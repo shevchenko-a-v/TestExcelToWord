@@ -155,7 +155,7 @@ void ExcelToWordConverter::vWriteLog(const CString & strMessage)
 	TCHAR buffer[10];
 	_tcsftime(buffer, 10, _T("%H:%M:%S"), &tm);
 	CString strLogEntry;
-	strLogEntry.Format(_T("%s.%d\t\t"), buffer, milliseconds.count());
+	strLogEntry.Format(_T("%s.%03d\t"), buffer, milliseconds.count());
 	strLogEntry += strMessage + _T("\n");
 	m_strLog += strLogEntry;
 }
