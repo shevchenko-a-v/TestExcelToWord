@@ -16,3 +16,17 @@
 #include "Include\atlframe.h"
 #include "Include\atlsplit.h"
 #include "Include\atlctrls.h"
+
+#import "C:\\Program Files\\Microsoft Office\\root\\vfs\\ProgramFilesCommonX64\\Microsoft Shared\\OFFICE16\\MSO.DLL" \
+	rename( "RGB", "MSORGB" ) \
+	rename("DocumentProperties", "ExcelDocumentProperties")
+
+
+#import "C:\\Program Files\\Microsoft Office\\root\\vfs\\ProgramFilesCommonX86\\Microsoft Shared\\VBA\\VBA6\\VBE6EXT.OLB"
+
+
+#import "C:\\Program Files\\Microsoft Office\\root\Office16\\EXCEL.EXE" \
+	rename( "DialogBox", "ExcelDialogBox" ) \
+	rename( "RGB", "ExcelRGB" ) \
+	rename( "CopyFile", "ExcelCopyFile" ) \
+	rename( "ReplaceText", "ExcelReplaceText" ) 

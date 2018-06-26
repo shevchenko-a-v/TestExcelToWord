@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "TestExcelToWord.h"
+#include "ExcelToWordConverter.h"
 
 
 CTestExcelToWordDialogModule _AtlModule;
@@ -14,6 +15,17 @@ extern "C" int WINAPI _tWinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstan
 }
 
 
+
+
+// Window Message Handlers
+
+LRESULT CTestExcelToWordDialog::OnInitDialog(UINT nMessage, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+{
+	ATLVERIFY(CenterWindow());
+	m_EditSourcePath.Attach(GetDlgItem(IDC_EDIT_SOURCE));
+	m_EditOutputPath.Attach(GetDlgItem(IDC_EDIT_OUTPUT));
+	return 0;
+}
 
 LRESULT CTestExcelToWordDialog::OnBnClickedBtnBrowseSource(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
@@ -75,6 +87,14 @@ LRESULT CTestExcelToWordDialog::OnBnClickedBtnBrowseOutput(WORD /*wNotifyCode*/,
 
 LRESULT CTestExcelToWordDialog::OnBnClickedBtnTransfer(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
+	ATLASSERT(m_EditSourcePath.IsWindow());
+	ATLASSERT(m_EditOutputPath.IsWindow());
+
+	CString strSource, strDestination;
+	m_EditSourcePath.GetWindowText(strSource);
+	m_EditOutputPath.GetWindowText(strDestination);
+
+	m_converter.vTransferExcelToWord(strSource, strDestination);
 
 	return 0;
 }

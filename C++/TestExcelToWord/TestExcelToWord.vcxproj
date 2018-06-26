@@ -139,10 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ExcelToWordConverter.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="TestExcelToWord.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ExcelToWordConverter.h" />
     <ClInclude Include="Include\atlapp.h" />
     <ClInclude Include="Include\atlframe.h" />
     <ClInclude Include="Include\atlsplit.h" />
