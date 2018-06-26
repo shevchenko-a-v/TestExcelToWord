@@ -103,7 +103,15 @@ LRESULT CTestExcelToWordDialog::OnBnClickedBtnTransfer(WORD /*wNotifyCode*/, WOR
 	m_EditSourcePath.GetWindowText(strSource);
 	m_EditOutputPath.GetWindowText(strDestination);
 
-	m_converter.vTransferExcelToWord(strSource, strDestination);
+	try
+	{
+		m_converter.vTransferExcelToWord(strSource, strDestination);
+		MessageBox(_T("Operation completed successfuly."), _T("Success"), MB_OK | MB_ICONINFORMATION);
+	}
+	catch (...)
+	{
+		MessageBox(_T("Operation failed. See log for details."), _T("Error"), MB_OK | MB_ICONERROR);
+	}
 
 	return 0;
 }
@@ -130,7 +138,7 @@ LRESULT CTestExcelToWordDialog::OnBnClickedBtnSaveLog(WORD /*wNotifyCode*/, WORD
 	of.lpstrDefExt = _T("txt");
 	of.nMaxFile = 2048;
 	of.lpstrFile = buffer;
-	of.lpstrTitle = _T("Specify output Word file");
+	of.lpstrTitle = _T("Specify log file");
 	of.Flags = OFN_DONTADDTORECENT | OFN_NONETWORKBUTTON | OFN_OVERWRITEPROMPT;
 
 	if (GetSaveFileName(&of))

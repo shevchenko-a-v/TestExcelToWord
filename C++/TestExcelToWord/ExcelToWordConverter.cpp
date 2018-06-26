@@ -13,6 +13,7 @@ typedef std::chrono::system_clock Clock;
 
 void ExcelToWordConverter::vTransferExcelToWord(const CString & strSourceFilePath, const CString & strOutputFilePath)
 {
+	CoInitialize(NULL);
 	m_strLog.Empty();
 	try
 	{
@@ -43,24 +44,30 @@ void ExcelToWordConverter::vTransferExcelToWord(const CString & strSourceFilePat
 	{
 		vWriteLog(CString(e.what()));
 		throw;
-	}	
+	}
+	CoUninitialize();
 }
 
 void ExcelToWordConverter::vReadFromExcel(const CString & strSourceFile, CString & strLetters, CString & strDigits)
 {
+	bool bApplicationClosed = true;
+	bool bWorkbookClosed = true;
+	Excel::_ApplicationPtr pApplication; 
+	Excel::_WorkbookPtr pWorkbook;
 	try
 	{
 		strLetters = _T("");
 		strDigits = _T("");
 		vWriteLog(_T("Started reading from source file."));
 
-		Excel::_ApplicationPtr pApplication;
 		if (FAILED(pApplication.CreateInstance(_T("Excel.Application"))))
 			throw runtime_error("Excel could not be started. Check that you have Microsoft Office installed.");
+		bApplicationClosed = false;
 		vWriteLog(_T("Excel is started."));
 
 		vWriteLog(_T("Opening workbook..."));
-		Excel::_WorkbookPtr pWorkbook = pApplication->Workbooks->Open(_com_util::ConvertStringToBSTR(CStringA(strSourceFile)), 0, true);
+		pWorkbook = pApplication->Workbooks->Open(_com_util::ConvertStringToBSTR(CStringA(strSourceFile)), 0, true);
+		bWorkbookClosed = false;
 		vWriteLog(_T("Workbook is successfully opened."));
 
 		vWriteLog(_T("Opening worksheet..."));
@@ -92,12 +99,18 @@ void ExcelToWordConverter::vReadFromExcel(const CString & strSourceFile, CString
 			}
 		}
 		vWriteLog(_T("Obtaining values from the first column completed."));
+		bWorkbookClosed = true;
 		pWorkbook->Close(VARIANT_FALSE); 
+		bApplicationClosed = true;
 		pApplication->Quit();
 		vWriteLog(_T("Excel is closed."));
 	}
 	catch(...)
 	{
+		if (!bWorkbookClosed)
+			pWorkbook->Close(VARIANT_FALSE);
+		if (!bApplicationClosed)
+			pApplication->Quit();
 		vWriteLog(_T("Error occured during reading from source file."));
 		throw;
 	}
@@ -106,16 +119,21 @@ void ExcelToWordConverter::vReadFromExcel(const CString & strSourceFile, CString
 
 void ExcelToWordConverter::vWriteToWord(const CString & strDestinationFile, const CString & strLetters, const CString & strDigits)
 {
+	bool bApplicationClosed = true;
+	bool bDocClosed = true;
+	Word::_ApplicationPtr pApplication;
+	Word::_DocumentPtr pDoc;
 	try
 	{
 		vWriteLog(_T("Started writing to destination file."));
-
-		Word::_ApplicationPtr pApplication;
+				
 		if (FAILED(pApplication.CreateInstance(_T("Word.Application"))))
 			throw runtime_error("Word could not be started. Check that you have Microsoft Office installed."); vWriteLog(_T("Excel is started."));
-
+		
+		bApplicationClosed = false;
 		vWriteLog(_T("Adding new document..."));
-		Word::_DocumentPtr pDoc = pApplication->Documents->Add();
+		pDoc = pApplication->Documents->Add();
+		bDocClosed = false;
 		vWriteLog(_T("New document is successfully added."));
 
 		pDoc->Content->Font->Size = 12;
@@ -126,14 +144,20 @@ void ExcelToWordConverter::vWriteToWord(const CString & strDestinationFile, cons
 		
 		CComVariant path(strDestinationFile);
 		pDoc->SaveAs2(&path);
-		pDoc->Close();
+		bDocClosed = true;
+		pDoc->Close(); 
 		vWriteLog(_T("Word file has been saved to disk."));
+		bApplicationClosed = true;
 		pApplication->Quit();
 		vWriteLog(_T("Word is closed."));
 
 	}
 	catch(...)
 	{
+		if (!bDocClosed)
+			pDoc->Close();
+		if (!bApplicationClosed)
+			pApplication->Quit();
 		vWriteLog(_T("Error occured during writing to destination file."));
 		throw;
 	}

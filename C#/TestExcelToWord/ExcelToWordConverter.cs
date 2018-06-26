@@ -123,7 +123,7 @@ namespace TestExcelToWord
         private void WriteLog(string message)
         {
             string timeStamp = DateTime.Now.ToString("HH:mm:ss.fff");
-            _log.AppendLine(string.Format($@"{timeStamp}        {message}"));
+            _log.AppendLine(string.Format($@"{timeStamp}    {message}"));
         }
 
         public string Log { get { return _log.ToString(); } }
